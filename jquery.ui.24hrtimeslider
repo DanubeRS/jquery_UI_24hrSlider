@@ -1,0 +1,28 @@
+var initialValue = [2000, 2012];
+
+var sliderTooltip = function (event, ui) {
+    var lValue = ui.values[0] || initialValue[0];
+    var rValue = ui.values[1] || initialValue[1];
+
+    var tooltipL = '<div class="tooltip" id="tooltip_left"><div class="tooltip-inner">' + lValue + '</div><div class="tooltip-arrow"></div></div>';
+    var tooltipR = '<div class="tooltip" id="tooltip_left"><div class="tooltip-inner">' + rValue + '</div><div class="tooltip-arrow"></div></div>';
+
+
+    $(ui.handle).parent().children('.ui-slider-handle').eq(0).html(tooltipL);
+    $(ui.handle).parent().children('.ui-slider-handle').eq(1).html(tooltipR);
+};
+
+$(document).ready(function () {
+    $("#slider").slider({
+        values: initialValue,
+        range: true,
+        min: 1955,
+        max: 2015,
+        step: 1,
+        slide: sliderTooltip,
+        stop: function () {
+            $('.tooltip').fadeOut('slow');
+        }
+
+    });
+});

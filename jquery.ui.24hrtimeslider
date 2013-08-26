@@ -1,8 +1,8 @@
 var initialValue = [2000, 2012];
 
-var sliderTooltip = function (event, ui) {
-    var lValue = ui.values[0] || initialValue[0];
-    var rValue = ui.values[1] || initialValue[1];
+var sliderTooltip = function(event, ui) {
+    var lValue = $(this).convertTime(ui.values[0] || initialValue[0], null);
+    var rValue = $(this).convertTime(ui.values[1] || initialValue[1]);
 
     var tooltipL = '<div class="tooltip" id="tooltip_left"><div class="tooltip-inner">' + lValue + '</div><div class="tooltip-arrow"></div></div>';
     var tooltipR = '<div class="tooltip" id="tooltip_left"><div class="tooltip-inner">' + rValue + '</div><div class="tooltip-arrow"></div></div>';
@@ -12,17 +12,59 @@ var sliderTooltip = function (event, ui) {
     $(ui.handle).parent().children('.ui-slider-handle').eq(1).html(tooltipR);
 };
 
-$(document).ready(function () {
+$(document).ready(function() {
     $("#slider").slider({
-        values: initialValue,
+        values: [540, 900],
         range: true,
-        min: 1955,
-        max: 2015,
-        step: 1,
+        min: 0,
+        max: 1440,
+        step: 30,
         slide: sliderTooltip,
-        stop: function () {
+        stop: function() {
             $('.tooltip').fadeOut('slow');
         }
 
     });
 });
+
+/*
+ * Derrived from github.com/marcneuwirth/jquery-ui-timeslider (Thanks!)
+ */
+$.fn.convertTime = function(value, format) {
+
+    if (format == 'undefined')
+        format = 12;
+
+    var time = null,
+        minutes,
+        hours;
+
+    hours = Math.floor(value / 60);
+    minutes = value - (hours * 60);
+
+    if (format == 12) {
+        if (hours === 0) {
+            hours = 12;
+        }
+
+        if (hours > 12) {
+            hours = hours - 12;
+            time = "PM";
+        } else {
+            time = "AM";
+        }
+
+        if (minutes < 10) {
+            minutes = "0" + minutes;
+        }
+
+        return hours + ":" + minutes + " " + time;
+    } else {
+
+        if (minutes < 10) {
+            minutes = "0" + minutes;
+        }
+
+        return hours + ":" + minutes;
+    }
+};

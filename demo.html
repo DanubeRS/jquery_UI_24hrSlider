@@ -1,22 +1,19 @@
 <!doctype html>
 <html>
-<head>
-	
-	<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
-  	<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
-  	<link rel=stylesheet href="theme/jquery-ui-1.10.3.custom.css" />
-  	<link rel=stylesheet href="jquery.ui.24hrtimeslider.css" />
-  	
-  	<style>
-  	.sliderContainer{
-  		width: 400px;
-  	}
-  	</style>
+  <head>
+    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+    <script src="jquery.ui.24hrtimeslider" type="text/javascript" charset="utf-8"></script>
+    <link rel=stylesheet href="theme/jquery-ui-1.10.3.custom.css" />
+    <link rel=stylesheet href="jquery.ui.24hrtimeslider.css" />
+  </head>
+  <body>
+    <div class="controlContainer">
+      <div class="sliderContainer" ></div>
+      <div class="checkboxContainer">
+        <input type="checkbox" class="_24hr" id="_24hr" /><label for="_24hr">24 Hours</label>
+      </div>
+    </div>
 
-</head>
-<body>
-<div id='slider' class="sliderContainer"></div>	
-<script src="jquery.ui.24hrtimeslider" type="text/javascript" charset="utf-8"></script>
-</body>
-
+  </body>
 </html>

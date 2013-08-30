@@ -1,30 +1,64 @@
-var initialValue = [2000, 2012];
+var initialValues = [540, 900];
 
 var sliderTooltip = function(event, ui) {
-    var lValue = $(this).convertTime(ui.values[0] || initialValue[0], null);
-    var rValue = $(this).convertTime(ui.values[1] || initialValue[1]);
 
-    var tooltipL = '<div class="tooltip" id="tooltip_left"><div class="tooltip-inner">' + lValue + '</div><div class="tooltip-arrow"></div></div>';
-    var tooltipR = '<div class="tooltip" id="tooltip_left"><div class="tooltip-inner">' + rValue + '</div><div class="tooltip-arrow"></div></div>';
+
+    var lValue = $(this).convertTime(ui.values[0], null);
+    var rValue = $(this).convertTime(ui.values[1], null);
+
+    var tooltipL = '<div class="tooltip"><div class="tooltip-inner">' + lValue + '</div><div class="tooltip-arrow"></div></div>';
+    var tooltipR = '<div class="tooltip"><div class="tooltip-inner">' + rValue + '</div><div class="tooltip-arrow"></div></div>';
 
 
     $(ui.handle).parent().children('.ui-slider-handle').eq(0).html(tooltipL);
     $(ui.handle).parent().children('.ui-slider-handle').eq(1).html(tooltipR);
+
+    // Change the element styling when a range of 24 hours is selected.
+    var div = $(this).find('div:not([class^=tooltip])');
+
+    if (ui.values[0] == 0 && ui.values[1] == 1440) {
+        div.addClass("ui-state-error ");
+        div.find('.tooltip').removeClass('ui-state-error');
+        $(this).siblings(".checkboxContainer").children("._24hr").eq(0).prop('checked', true).button("refresh");;
+
+    } else {
+        div.removeClass("ui-state-error");
+        $(this).siblings(".checkboxContainer").children("._24hr").eq(0).prop('checked', false).button("refresh");
+    }
+    if(event.originalEvent){
+        $('.tooltip').delay(2000).fadeOut('slow');
+    } else {
+        $('.tooltip').delay(500).fadeOut('slow');
+    }
+
 };
 
 $(document).ready(function() {
-    $("#slider").slider({
-        values: [540, 900],
+    $(".sliderContainer").slider({
+        values: initialValues,
         range: true,
         min: 0,
         max: 1440,
         step: 30,
         slide: sliderTooltip,
-        stop: function() {
-            $('.tooltip').fadeOut('slow');
-        }
+        start: sliderTooltip,
+        change: sliderTooltip,
 
     });
+
+    $("._24hr").button({
+        create: function(event, ui) {
+            $(this).bind('click', function(event, ui) {
+                if ($(this).prop('checked')) {
+                    $(".sliderContainer").slider("option", "values", [0, 1440]);
+                } else {
+                    $(".sliderContainer").slider("option", "values", initialValues);
+                }
+            });
+        },
+    });
+
+    $(".controlContainer").children('checkboxContainer').eq(0);
 });
 
 /*
@@ -36,8 +70,8 @@ $.fn.convertTime = function(value, format) {
         format = 12;
 
     var time = null,
-        minutes,
-        hours;
+        minutes = 0,
+        hours = 0;
 
     hours = Math.floor(value / 60);
     minutes = value - (hours * 60);
